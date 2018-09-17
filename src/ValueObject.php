@@ -21,9 +21,9 @@ interface ValueObject
     /**
      * Check value object equality.
      *
-     * @param self $valueObject
+     * @param mixed $valueObject
      *
      * @return bool
      */
-    public function isEqualTo(self $valueObject): bool;
+    public function isEqualTo($valueObject): bool;
 }

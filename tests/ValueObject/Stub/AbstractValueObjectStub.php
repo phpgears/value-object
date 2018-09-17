@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Gears\ValueObject\Tests\Stub;
 
 use Gears\ValueObject\AbstractValueObject;
-use Gears\ValueObject\ValueObject;
 
 /**
  * Abstract value object stub class.
@@ -50,8 +49,10 @@ final class AbstractValueObjectStub extends AbstractValueObject
     /**
      * {@inheritdoc}
      */
-    public function isEqualTo(ValueObject $valueObject): bool
+    public function isEqualTo($valueObject): bool
     {
-        return \get_class($valueObject) === self::class && $valueObject->getValue() === $this->value;
+        return \is_object($valueObject)
+            && \get_class($valueObject) === self::class
+            && $valueObject->getValue() === $this->getValue();
     }
 }
