@@ -27,7 +27,7 @@ abstract class AbstractValueObject implements ValueObject
      */
     final protected function __construct()
     {
-        $this->checkImmutability();
+        $this->assertImmutable();
     }
 
     /**
