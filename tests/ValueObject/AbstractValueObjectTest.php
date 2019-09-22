@@ -25,14 +25,14 @@ class AbstractValueObjectTest extends TestCase
     {
         $stub = AbstractValueObjectStub::fromString('thisIsMyValue');
 
-        $this->assertSame('thisIsMyValue', $stub->getValue());
+        static::assertSame('thisIsMyValue', $stub->getValue());
     }
 
     public function testEquality(): void
     {
         $stub = AbstractValueObjectStub::fromString('thisIsMyValue');
 
-        $this->assertTrue($stub->isEqualTo(AbstractValueObjectStub::fromString('thisIsMyValue')));
-        $this->assertFalse($stub->isEqualTo(AbstractValueObjectStub::fromString('thisIsNOTMyValue')));
+        static::assertTrue($stub->isEqualTo(AbstractValueObjectStub::fromString('thisIsMyValue')));
+        static::assertFalse($stub->isEqualTo(AbstractValueObjectStub::fromString('thisIsNOTMyValue')));
     }
 }
