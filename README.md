@@ -12,7 +12,7 @@
 
 # value-object
 
-Immutable value object for PHP
+Immutable Value Objects for PHP
 
 ## Installation
 
@@ -30,23 +30,23 @@ Require composer autoload file
 require './vendor/autoload.php';
 ```
 
-Extend `Gears\value-object\AbstractValueObject`. Make your class final, value objects should always be final
+Extend from `Gears\value-object\AbstractValueObject`. Make your class final, value objects should always be final
 
-Be aware constructor is protected, you should create a "named constructor" for your value object
+Be aware of the protected constructor, you should create a "named constructor" for your value object
 
 ```php
-use Gears\value-object\AbstractValueObject;
+use Gears\ValueObject\AbstractValueObject;
 
-final class CustomValueObject extends AbstractValueObject
+final class CustomStringValueObject extends AbstractValueObject
 {
     private $value;
 
     public static function fromString(string $value)
     {
-        $valueObject = new self();
-        $valueObject->value = $value;
+        $stringObject = new self();
+        $stringObject->value = $value;
 
-        return $valueObject;
+        return $stringObject;
     }
 
     public function getValue(): string
@@ -60,6 +60,57 @@ final class CustomValueObject extends AbstractValueObject
     }
 }
 ```
+
+### Serialization
+
+Extending AbstractValueObject does not automatically define serialization mechanisms in your value objects because value objects can be composed of several values, other value objects and even other objects such as enums
+
+For this consider adding serialization methods in your value objects to control how serialization takes place
+
+```php
+use Gears\ValueObject\AbstractValueObject;
+
+final class Money extends AbstractValueObject implements \Serializable
+{
+    private const CURRENCY_EUR = 'eur';
+
+    private $value;
+    private $precision;
+    private $currency;
+
+    public static function fromEuro(int $value, int $precision)
+    {
+        $money = new self();
+        $money->value = $value;
+        $money->precision = $precision;
+        $money->currency = static::CURRENCY_EUR; // Should be an enum
+
+        return $money;
+    }
+
+    // [...]
+
+    final public function serialize(): string
+    {
+        return serialize([
+            $this->value,
+            $this->precision,
+            $this->currency,
+        ]);
+    }
+
+    public function unserialize($serialized): void 
+    {
+        list(
+            $this->value,
+            $this->precision,
+            $this->currency
+        ) = \unserialize($serialized, ['allowed_classes' => false]);
+    }
+}
+```
+
+Enums and Value Objects get along perfectly, consider using [phpgears/enum](https://github.com/phpgears/enum) for enumerations
 
 ## Contributing
 
