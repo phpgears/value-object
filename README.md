@@ -54,7 +54,7 @@ final class CustomValueObject extends AbstractValueObject
         return $this->value;
     }
 
-    public function isEqualTo(ValueObject $valueObject): bool
+    public function isEqualTo($valueObject): bool
     {
         return \get_class($valueObject) === self::class && $valueObject->getValue() === $this->value;
     }
