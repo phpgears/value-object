@@ -30,7 +30,7 @@ Require composer autoload file
 require './vendor/autoload.php';
 ```
 
-Extend from `Gears\value-object\AbstractValueObject`. Make your class final, value objects should always be final
+Extend from `Gears\ValueObject\AbstractValueObject`. Make your class final, value objects should always be final
 
 Be aware of the protected constructor, you should create a "named constructor" for your value object
 
@@ -56,7 +56,8 @@ final class CustomStringValueObject extends AbstractValueObject
 
     public function isEqualTo($valueObject): bool
     {
-        return \get_class($valueObject) === self::class && $valueObject->getValue() === $this->value;
+        return \get_class($valueObject) === self::class 
+            && $valueObject->getValue() === $this->value;
     }
 }
 ```
@@ -90,6 +91,18 @@ final class Money extends AbstractValueObject implements \Serializable
 
     // [...]
 
+    final public function __serialize(): array
+    {
+        return ['value' => $this->value];
+    }
+
+    final public function __unserialize(array $data): void
+    {
+        $this->assertImmutable();
+
+        $this->value = $data['value'];
+    }
+
     final public function serialize(): string
     {
         return serialize([
@@ -101,6 +114,8 @@ final class Money extends AbstractValueObject implements \Serializable
 
     public function unserialize($serialized): void 
     {
+        $this->assertImmutable();
+
         list(
             $this->value,
             $this->precision,
