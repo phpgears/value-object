@@ -2,7 +2,7 @@
 [![Latest Version](https://img.shields.io/packagist/v/phpgears/value-object.svg?style=flat-square)](https://packagist.org/packages/phpgears/value-object)
 [![License](https://img.shields.io/github/license/phpgears/value-object.svg?style=flat-square)](https://github.com/phpgears/value-object/blob/master/LICENSE)
 
-[![Build Status](https://img.shields.io/travis/phpgears/value-object.svg?style=flat-square)](https://travis-ci.org/phpgears/value-object)
+[![Build Status](https://img.shields.io/travis/com/phpgears/value-object.svg?style=flat-square)](https://travis-ci.com/github/phpgears/value-object)
 [![Style Check](https://styleci.io/repos/149037500/shield)](https://styleci.io/repos/149037500)
 [![Code Quality](https://img.shields.io/scrutinizer/g/phpgears/value-object.svg?style=flat-square)](https://scrutinizer-ci.com/g/phpgears/value-object)
 [![Code Coverage](https://img.shields.io/coveralls/phpgears/value-object.svg?style=flat-square)](https://coveralls.io/github/phpgears/value-object)
@@ -93,7 +93,11 @@ final class Money extends AbstractValueObject implements \Serializable
 
     final public function __serialize(): array
     {
-        return ['value' => $this->value];
+        return [
+            'value' => $this->value,
+            'precision' => $this->precision,
+            'currency' => $this->currency,
+        ];
     }
 
     final public function __unserialize(array $data): void
@@ -101,6 +105,8 @@ final class Money extends AbstractValueObject implements \Serializable
         $this->assertImmutable();
 
         $this->value = $data['value'];
+        $this->precision = $data['precision'];
+        $this->currency = $data['currency'];
     }
 
     final public function serialize(): string
